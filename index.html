@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
+<!-- saved from url=(0048)file:///Users/nathantobin/Downloads/index_8.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Wareham Yard Sale 2026</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="./Wareham Yard Sale 2026_files/leaflet.css">
+<script src="./Wareham Yard Sale 2026_files/leaflet.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;width:100%;background:#111;color:#fff;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;overflow:hidden;}
 
-/* SETUP */
+/* ── SETUP ── */
 #setup{position:fixed;inset:0;background:#111;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 20px;gap:16px;}
 #setup h1{font-size:26px;font-weight:800;color:#f5c842;text-align:center;}
 #setup p{font-size:13px;color:#888;text-align:center;max-width:300px;line-height:1.6;}
@@ -29,59 +29,54 @@ html,body{height:100%;width:100%;background:#111;color:#fff;font-family:-apple-s
 .btn-b{width:100%;padding:13px;background:transparent;color:#0a84ff;border:1.5px solid #0a84ff;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;}
 .btn-b:disabled{opacity:.4;}
 
-/* LOADING */
-#loading{position:fixed;inset:0;background:#111;z-index:9998;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:30px;}
-.load-num{font-size:56px;font-weight:800;color:#f5c842;line-height:1;}
-.load-lbl{font-size:13px;color:#888;letter-spacing:.05em;}
-.load-bar{width:100%;max-width:280px;height:5px;background:#2c2c2e;border-radius:3px;overflow:hidden;}
-.load-fill{height:100%;background:linear-gradient(90deg,#f5c842,#ff6b35);width:0%;transition:width .3s;border-radius:3px;}
-.load-note{font-size:11px;color:#555;text-align:center;max-width:260px;line-height:1.6;}
+/* ── LOADING ── */
+#loading{position:fixed;inset:0;background:#111;z-index:9998;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:30px;text-align:center;}
+.ld-num{font-size:56px;font-weight:800;color:#f5c842;line-height:1;}
+.ld-lbl{font-size:13px;color:#888;}
+.ld-bar{width:100%;max-width:280px;height:5px;background:#2c2c2e;border-radius:3px;overflow:hidden;}
+.ld-fill{height:100%;background:linear-gradient(90deg,#f5c842,#ff6b35);width:0%;transition:width .3s;border-radius:3px;}
+.ld-note{font-size:11px;color:#555;max-width:260px;line-height:1.7;}
 
-/* APP */
+/* ── APP ── */
 #app{position:fixed;inset:0;display:none;flex-direction:column;}
 
-/* TOP BAR */
+/* top bar */
 #topbar{position:absolute;top:0;left:0;right:0;z-index:1000;background:rgba(18,18,18,.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid #2c2c2e;padding:10px 14px 8px;}
 .tb1{display:flex;align-items:center;gap:8px;margin-bottom:3px;}
-.tb-stop{font-size:11px;color:#f5c842;font-weight:700;text-transform:uppercase;letter-spacing:.06em;flex-shrink:0;}
-.tb-addr{font-size:15px;font-weight:700;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.tb-dist{font-size:12px;color:#888;flex-shrink:0;}
+.tb-sn{font-size:11px;color:#f5c842;font-weight:700;text-transform:uppercase;letter-spacing:.06em;flex-shrink:0;}
+.tb-ad{font-size:15px;font-weight:700;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tb-di{font-size:12px;color:#888;flex-shrink:0;}
 .tb2{display:flex;align-items:center;gap:8px;}
 .gdot{width:8px;height:8px;border-radius:50%;background:#555;flex-shrink:0;}
-.gdot.live{background:#30d158;box-shadow:0 0 6px #30d158;animation:pulse 2s infinite;}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.gtxt{font-size:11px;color:#666;flex:1;}
-.pbar{width:60px;height:4px;background:#333;border-radius:2px;overflow:hidden;}
+.gdot.live{background:#30d158;box-shadow:0 0 6px #30d158;animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.gtxt{font-size:11px;color:#666;flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+.pbar{width:56px;height:4px;background:#333;border-radius:2px;overflow:hidden;}
 .pfill{height:100%;background:#f5c842;transition:width .4s;border-radius:2px;}
 .ppct{font-size:11px;color:#666;margin-left:4px;}
 
-/* MAP */
+/* map */
 #map{position:absolute;inset:0;}
+#recenter{position:absolute;right:12px;top:160px;z-index:999;background:#1c1c1e;border:1px solid #3a3a3c;border-radius:10px;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,.6);}
 
-/* RECENTER */
-#recenter{position:absolute;right:12px;z-index:999;background:#1c1c1e;border:1px solid #3a3a3c;border-radius:10px;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,.6);}
-
-/* BOTTOM */
-#bottom{position:absolute;bottom:0;left:0;right:0;z-index:1000;background:rgba(18,18,18,.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid #2c2c2e;padding:10px 12px env(safe-area-inset-bottom,16px);}
-.mcard{background:#2c2c2e;border-radius:12px;padding:11px 14px;margin-bottom:10px;display:flex;align-items:center;gap:10px;}
-.mcard-icon{font-size:22px;flex-shrink:0;}
-.mcard-info{flex:1;min-width:0;}
-.mc-lbl{font-size:10px;color:#f5c842;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;}
-.mc-addr{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.mc-dist{font-size:11px;color:#888;margin-top:2px;}
+/* bottom panel */
+#bottom{position:absolute;bottom:0;left:0;right:0;z-index:1000;background:rgba(18,18,18,.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid #2c2c2e;padding:10px 12px calc(env(safe-area-inset-bottom,0px) + 60px);}
+.mcard{background:#2c2c2e;border-radius:12px;padding:11px 14px;margin-bottom:10px;}
+.mc-lbl{font-size:10px;color:#f5c842;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;}
+.mc-addr{font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mc-sub{font-size:11px;color:#888;margin-top:3px;}
 .brow{display:flex;gap:8px;}
-.abtn{flex:1;padding:13px 6px;border:none;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;transition:opacity .15s;}
+.abtn{flex:1;padding:13px 6px;border:none;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;}
 .abtn:active{opacity:.65;}
-.abtn small{font-size:10px;font-weight:500;opacity:.85;}
+.abtn small{font-size:10px;font-weight:500;}
 .b-nav{background:#0a84ff;color:#fff;}
 .b-done{background:#30d158;color:#000;}
 .b-skip{background:#2c2c2e;color:#aaa;border:1px solid #3a3a3c;}
 
-/* LIST */
+/* list */
 #listScreen{position:absolute;inset:0;z-index:999;background:#111;display:none;flex-direction:column;overflow:hidden;}
 #listScreen.on{display:flex;}
-.lscroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
-.lscroll::-webkit-scrollbar{display:none;}
+.lscroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:60px;}
 .lhdr{padding:8px 16px;font-size:11px;color:#666;text-transform:uppercase;letter-spacing:.1em;background:#1c1c1e;position:sticky;top:0;border-bottom:1px solid #222;z-index:5;}
 .lrow{display:flex;align-items:center;padding:12px 16px;border-bottom:1px solid #1c1c1e;gap:12px;cursor:pointer;}
 .lrow:active{background:#1c1c1e;}
@@ -93,19 +88,19 @@ html,body{height:100%;width:100%;background:#111;color:#fff;font-family:-apple-s
 .lball.cur{border-color:#f5c842;color:#f5c842;}
 .lball.dn{background:#30d158;border-color:#30d158;color:#000;}
 .lbody{flex:1;min-width:0;}
-.la{font-size:13px;line-height:1.3;}
+.la{font-size:13px;}
 .ld{font-size:11px;color:#666;margin-top:1px;}
 .ltag{font-size:10px;padding:2px 8px;border-radius:5px;flex-shrink:0;}
 .ltag.cur{background:#f5c842;color:#000;font-weight:700;}
 .ltag.dn{background:rgba(48,209,88,.12);color:#30d158;}
 
-/* TABBAR */
-#tabbar{position:absolute;bottom:0;left:0;right:0;z-index:1001;background:#1c1c1e;border-top:1px solid #2c2c2e;display:flex;height:56px;padding-bottom:env(safe-area-inset-bottom,0);}
+/* tab bar */
+#tabbar{position:absolute;bottom:0;left:0;right:0;z-index:1001;background:#1c1c1e;border-top:1px solid #2c2c2e;display:flex;height:56px;}
 .ttab{flex:1;border:none;background:none;color:#666;font-size:11px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;}
 .ttab.on{color:#f5c842;}
 .ticon{font-size:22px;line-height:1;}
 
-/* POPUP */
+/* popup */
 .leaflet-popup-content-wrapper{background:#1c1c1e!important;color:#fff!important;border:1px solid #3a3a3c!important;border-radius:14px!important;box-shadow:0 8px 32px rgba(0,0,0,.9)!important;}
 .leaflet-popup-tip-container{display:none!important;}
 .leaflet-popup-close-button{color:#666!important;font-size:22px!important;top:8px!important;right:10px!important;}
@@ -117,58 +112,55 @@ html,body{height:100%;width:100%;background:#111;color:#fff;font-family:-apple-s
 <!-- SETUP -->
 <div id="setup">
   <h1>📍 Wareham Yard Sale</h1>
-  <p>Enter your starting address — we'll sort all stops closest to furthest and look up exact locations.</p>
+  <p>Enter your home address — we'll build the fastest route visiting all 84 stops, starting at your house.</p>
   <div class="card">
     <div>
-      <div class="lbl">Your Starting Address</div>
-      <input class="inp" id="addrIn" type="text" placeholder="351 County Rd, West Wareham, MA" autocomplete="street-address" autocorrect="off" autocapitalize="words"/>
-      <div class="hint" style="margin-top:6px;">Include city — Wareham, West Wareham, Onset, etc.</div>
+      <div class="lbl">Your Home Address</div>
+      <input class="inp" id="addrIn" type="text" placeholder="351 County Rd, West Wareham, MA" autocomplete="street-address" autocorrect="off" autocapitalize="words">
+      <div class="hint" style="margin-top:6px;">Include your full address with city and MA</div>
     </div>
     <div class="err" id="errTxt"></div>
     <button class="btn-y" id="goBtn" onclick="startAddr()">Build My Route →</button>
     <div class="divdr">— or —</div>
-    <button class="btn-b" id="gpsBtn" onclick="startGPS()">📡 Use My Current GPS Location</button>
+    <button class="btn-b" id="gpsBtn" onclick="startGPS()">📡 Start From My Current Location</button>
   </div>
 </div>
 
 <!-- LOADING -->
 <div id="loading">
-  <div class="load-num" id="loadN">0</div>
-  <div class="load-lbl">of 84 addresses looked up</div>
-  <div class="load-bar"><div class="load-fill" id="loadFill"></div></div>
-  <div class="load-note">Looking up exact locations once — this only happens the first time. Pins appear as they load.</div>
+  <div class="ld-num" id="ldN">0</div>
+  <div class="ld-lbl">of 84 stops located</div>
+  <div class="ld-bar"><div class="ld-fill" id="ldFill"></div></div>
+  <div class="ld-note">Finding exact locations for all stops.<br>Only happens once — saves for next time.</div>
 </div>
 
 <!-- APP -->
 <div id="app">
   <div id="topbar">
     <div class="tb1">
-      <div class="tb-stop" id="tbStop">Stop 1/84</div>
-      <div class="tb-addr" id="tbAddr">Loading...</div>
-      <div class="tb-dist" id="tbDist"></div>
+      <div class="tb-sn" id="tbSn">Stop 1</div>
+      <div class="tb-ad" id="tbAd">—</div>
+      <div class="tb-di" id="tbDi"></div>
     </div>
     <div class="tb2">
       <div class="gdot" id="gdot"></div>
-      <div class="gtxt" id="gtxt">Requesting location...</div>
+      <div class="gtxt" id="gtxt">Starting GPS...</div>
       <div class="pbar"><div class="pfill" id="pfill"></div></div>
       <div class="ppct" id="ppct">0%</div>
     </div>
   </div>
 
   <div id="map"></div>
-  <div id="recenter" onclick="reCenter()" style="top:160px;">📍</div>
+  <div id="recenter" onclick="reCenter()">📍</div>
 
   <div id="bottom">
     <div class="mcard">
-      <div class="mcard-icon">🎯</div>
-      <div class="mcard-info">
-        <div class="mc-lbl" id="mcLbl">Next Stop</div>
-        <div class="mc-addr" id="mcAddr">—</div>
-        <div class="mc-dist" id="mcDist"></div>
-      </div>
+      <div class="mc-lbl" id="mcLbl">Next Stop</div>
+      <div class="mc-addr" id="mcAddr">—</div>
+      <div class="mc-sub" id="mcSub"></div>
     </div>
     <div class="brow">
-      <button class="abtn b-nav"  onclick="doNav()">🧭<small>Directions</small></button>
+      <button class="abtn b-nav" onclick="doNav()">🧭<small>Directions</small></button>
       <button class="abtn b-done" onclick="doDone()">✓<small>Done</small></button>
       <button class="abtn b-skip" onclick="doSkip()">⏭<small>Skip</small></button>
     </div>
@@ -179,15 +171,15 @@ html,body{height:100%;width:100%;background:#111;color:#fff;font-family:-apple-s
   </div>
 
   <div id="tabbar">
-    <button class="ttab on" id="tabM" onclick="showTab('map')"><div class="ticon">🗺</div>Map</button>
-    <button class="ttab"    id="tabL" onclick="showTab('list')"><div class="ticon">📋</div>List</button>
+    <button class="ttab on" id="tabM" onclick="showTab(&#39;map&#39;)"><div class="ticon">🗺</div>Map</button>
+    <button class="ttab" id="tabL" onclick="showTab(&#39;list&#39;)"><div class="ticon">📋</div>List</button>
   </div>
 </div>
 
 <script>
-// ════════════════════════════════════
-// ALL 84 ADDRESSES
-// ════════════════════════════════════
+// ══════════════════════════════════════
+// 84 ADDRESSES
+// ══════════════════════════════════════
 const ADDRS = [
   "66 Circuit Ave, Wareham, MA",
   "14 Rosepoint Ave, West Wareham, MA",
@@ -275,13 +267,15 @@ const ADDRS = [
   "7 Connahasset Rd, Wareham, MA"
 ];
 
-// ════════════════════════════════════
+// ══════════════════════════════════════
 // STATE
-// ════════════════════════════════════
+// ══════════════════════════════════════
 let route=[], cur=0, doneArr=[];
 let map, userMarker, pins={}, followMe=true;
-let cachedCoords = JSON.parse(localStorage.getItem('ys_coords')||'null');
 
+// ══════════════════════════════════════
+// MATH
+// ══════════════════════════════════════
 function mi(a,b){
   const R=3958.8,dLat=(b.lat-a.lat)*Math.PI/180,dLng=(b.lng-a.lng)*Math.PI/180;
   const x=Math.sin(dLat/2)**2+Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLng/2)**2;
@@ -289,200 +283,228 @@ function mi(a,b){
 }
 function fmt(m){return m<0.1?Math.round(m*5280)+'ft':m.toFixed(1)+' mi';}
 
-// ════════════════════════════════════
-// SETUP
-// ════════════════════════════════════
+// ══════════════════════════════════════
+// NEAREST-NEIGHBOR ROUTE OPTIMIZER
+// Starts at your house, always goes to
+// the closest unvisited stop next
+// ══════════════════════════════════════
+function buildRoute(startCoord, stops){
+  const unvisited = [...stops];
+  const ordered   = [];
+  let   current   = startCoord;
+
+  while(unvisited.length > 0){
+    // Find closest unvisited stop to current position
+    let bestIdx = 0;
+    let bestDist = mi(current, unvisited[0]);
+    for(let i=1; i<unvisited.length; i++){
+      const d = mi(current, unvisited[i]);
+      if(d < bestDist){ bestDist=d; bestIdx=i; }
+    }
+    const next = unvisited.splice(bestIdx, 1)[0];
+    next.distFromPrev = bestDist;
+    ordered.push(next);
+    current = next;
+  }
+
+  // Add distFromStart for display
+  ordered.forEach(s => { s.distFromStart = mi(startCoord, s); });
+  return ordered;
+}
+
+// ══════════════════════════════════════
+// SETUP HANDLERS
+// ══════════════════════════════════════
 async function startAddr(){
-  const val=document.getElementById('addrIn').value.trim();
-  if(!val){setErr('Please enter your address.');return;}
-  const btn=document.getElementById('goBtn');
+  const val = document.getElementById('addrIn').value.trim();
+  if(!val){ setErr('Please enter your address.'); return; }
+  const btn = document.getElementById('goBtn');
   btn.disabled=true; btn.textContent='Looking up...'; setErr('');
-  const q=val.toLowerCase().includes(', ma')?val:val+', MA';
+  const q = val.toLowerCase().includes(', ma') ? val : val+', MA';
   try{
-    const r=await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q='+encodeURIComponent(q));
-    const d=await r.json();
-    if(!d||!d[0])throw 0;
-    loadAndBoot({lat:parseFloat(d[0].lat),lng:parseFloat(d[0].lon)});
+    const r = await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q='+encodeURIComponent(q));
+    const d = await r.json();
+    if(!d||!d[0]) throw 0;
+    await loadAndBoot({lat:parseFloat(d[0].lat), lng:parseFloat(d[0].lon)});
   }catch(e){
-    setErr("Couldn't find that. Try: 351 County Rd, West Wareham, MA");
+    setErr("Couldn't find that. Try the full address: 351 County Rd, West Wareham, MA");
     btn.disabled=false; btn.textContent='Build My Route →';
   }
 }
 
 function startGPS(){
-  if(!navigator.geolocation){setErr('GPS not supported.');return;}
-  const btn=document.getElementById('gpsBtn');
-  btn.disabled=true; btn.textContent='Getting location...'; setErr('');
-  // Must be triggered by user tap — this is correct for iOS Safari
+  if(!navigator.geolocation){ setErr('GPS not supported on this device.'); return; }
+  const btn = document.getElementById('gpsBtn');
+  btn.disabled=true; btn.textContent='Getting your location...'; setErr('');
   navigator.geolocation.getCurrentPosition(
-    p=>{loadAndBoot({lat:p.coords.latitude,lng:p.coords.longitude});},
-    e=>{
-      setErr('Location denied. Please enter your address instead, or go to Settings → Safari → Location → Allow.');
-      btn.disabled=false; btn.textContent='📡 Use My Current GPS Location';
+    async p => await loadAndBoot({lat:p.coords.latitude, lng:p.coords.longitude}),
+    e => {
+      const m = e.code===1
+        ? 'Location blocked. Go to Settings → Safari → Location → Allow, then try again.'
+        : 'GPS failed. Enter your address instead.';
+      setErr(m);
+      btn.disabled=false; btn.textContent='📡 Start From My Current Location';
     },
     {enableHighAccuracy:true, timeout:15000, maximumAge:0}
   );
 }
-function setErr(m){document.getElementById('errTxt').textContent=m;}
 
-// ════════════════════════════════════
-// GEOCODE ALL ADDRESSES (with cache)
-// ════════════════════════════════════
-async function loadAndBoot(start){
+function setErr(m){ document.getElementById('errTxt').textContent=m; }
+
+// ══════════════════════════════════════
+// GEOCODE + BUILD ROUTE + LAUNCH
+// ══════════════════════════════════════
+async function loadAndBoot(startCoord){
+  // Switch to loading screen
   document.getElementById('setup').style.display='none';
   document.getElementById('loading').style.display='flex';
 
-  let coords;
-  if(cachedCoords && cachedCoords.length===ADDRS.length){
-    // Use cached — instant
-    coords=cachedCoords;
-    document.getElementById('loadN').textContent=ADDRS.length;
-    document.getElementById('loadFill').style.width='100%';
-  } else {
-    // Geocode all addresses one by one
-    coords=[];
-    for(let i=0;i<ADDRS.length;i++){
+  // Check cache
+  let coords = JSON.parse(localStorage.getItem('ys_coords_v2')||'null');
+
+  if(!coords || coords.length !== ADDRS.length){
+    // Geocode all addresses
+    coords = [];
+    for(let i=0; i<ADDRS.length; i++){
       try{
-        const r=await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q='+encodeURIComponent(ADDRS[i]));
-        const d=await r.json();
-        if(d&&d[0]){
-          coords.push({lat:parseFloat(d[0].lat),lng:parseFloat(d[0].lon)});
-        } else {
-          coords.push(null);
-        }
-      }catch(e){coords.push(null);}
-      document.getElementById('loadN').textContent=i+1;
-      document.getElementById('loadFill').style.width=Math.round((i+1)/ADDRS.length*100)+'%';
+        const r = await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q='+encodeURIComponent(ADDRS[i]));
+        const d = await r.json();
+        coords.push(d&&d[0] ? {lat:parseFloat(d[0].lat),lng:parseFloat(d[0].lon)} : null);
+      }catch(e){ coords.push(null); }
+      document.getElementById('ldN').textContent = i+1;
+      document.getElementById('ldFill').style.width = Math.round((i+1)/ADDRS.length*100)+'%';
       await new Promise(r=>setTimeout(r,350));
     }
-    // Save to cache
-    localStorage.setItem('ys_coords',JSON.stringify(coords));
-    cachedCoords=coords;
+    localStorage.setItem('ys_coords_v2', JSON.stringify(coords));
+  } else {
+    // Cached — show instantly
+    document.getElementById('ldN').textContent = ADDRS.length;
+    document.getElementById('ldFill').style.width = '100%';
   }
 
-  // Build route — filter out any that failed, sort by distance
-  const stops=[];
+  // Build stops array (skip any that failed geocoding)
+  const stops = [];
   ADDRS.forEach((a,i)=>{
-    if(coords[i]) stops.push({a,lat:coords[i].lat,lng:coords[i].lng,dist:mi(start,coords[i])});
+    if(coords[i]) stops.push({a, lat:coords[i].lat, lng:coords[i].lng});
   });
-  stops.sort((a,b)=>a.dist-b.dist);
-  route=stops; cur=0; doneArr=[];
 
+  // ★ NEAREST-NEIGHBOR ROUTING from startCoord ★
+  route    = buildRoute(startCoord, stops);
+  cur      = 0;
+  doneArr  = [];
+
+  // Launch app
   document.getElementById('loading').style.display='none';
   document.getElementById('app').style.display='flex';
 
-  initMap(start);
-  startTracking(); // ask for GPS permission NOW (user already tapped a button)
+  initMap(startCoord);
+  startGPSTracking();
   redraw();
 }
 
-// ════════════════════════════════════
-// MAP
-// ════════════════════════════════════
+// ══════════════════════════════════════
+// MAP SETUP
+// ══════════════════════════════════════
 function initMap(start){
-  map=L.map('map',{zoomControl:false,attributionControl:false})
-       .setView([start.lat,start.lng],13);
+  map = L.map('map',{zoomControl:false,attributionControl:false})
+          .setView([start.lat, start.lng], 13);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
     {subdomains:'abcd',maxZoom:19}).addTo(map);
   L.control.zoom({position:'topright'}).addTo(map);
-  document.getElementById('recenter').style.top='160px';
-  map.on('dragstart',()=>{followMe=false;});
+  map.on('dragstart', ()=>{ followMe=false; });
 
-  // Start pin
-  L.marker([start.lat,start.lng],{icon:dot('#aaa',14),zIndexOffset:500})
-   .addTo(map).bindPopup('<b style="color:#fff">🏁 Your Start</b>');
+  // Home pin
+  const homeIcon = L.divIcon({className:'',
+    html:`<div style="background:#f5c842;color:#000;border-radius:8px;padding:3px 7px;font-size:12px;font-weight:800;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.6);">🏠 Start</div>`,
+    iconAnchor:[30,12]});
+  L.marker([start.lat,start.lng],{icon:homeIcon,zIndexOffset:500}).addTo(map);
 
   // All stop pins
   route.forEach((s,i)=>{
-    pins[i]=L.marker([s.lat,s.lng],{icon:pin(i)})
-      .addTo(map).on('click',()=>popup(i));
+    pins[i] = L.marker([s.lat,s.lng],{icon:makePin(i)})
+      .addTo(map).on('click',()=>showPopup(i));
   });
 
-  // Route line
-  L.polyline(route.map(s=>[s.lat,s.lng]),
-    {color:'#f5c842',weight:2,opacity:.3,dashArray:'5,7'}).addTo(map);
+  // Route line showing the optimized path
+  const latlngs = route.map(s=>[s.lat,s.lng]);
+  L.polyline([[start.lat,start.lng], ...latlngs],
+    {color:'#f5c842',weight:2,opacity:.25,dashArray:'5,8'}).addTo(map);
 
   // Fly to first stop
   map.flyTo([route[0].lat,route[0].lng],14,{duration:.8});
 }
 
-function dot(c,s){
+function pinColor(i){
+  if(doneArr.includes(i)) return '#30d158';
+  if(i===cur)             return '#f5c842';
+  return '#ff6b35';
+}
+function makePin(i){
+  const c=pinColor(i), big=i===cur, s=big?20:11;
   return L.divIcon({className:'',
-    html:`<div style="width:${s}px;height:${s}px;background:${c};border-radius:50%;border:2px solid rgba(0,0,0,.5);box-shadow:0 0 ${s>12?'8px '+c:'3px #0008'};"></div>`,
+    html:`<div style="width:${s}px;height:${s}px;background:${c};border-radius:50%;border:${big?'2.5px solid #fff':'1.5px solid rgba(0,0,0,.4)'};box-shadow:0 0 ${big?'12px '+c:'3px rgba(0,0,0,.5)'};"></div>`,
     iconSize:[s,s],iconAnchor:[s/2,s/2]});
 }
-function pinC(i){
-  if(doneArr.includes(i))return'#30d158';
-  if(i===cur)return'#f5c842';
-  return'#ff6b35';
-}
-function pin(i){
-  const c=pinC(i),big=i===cur,s=big?20:11;
-  return L.divIcon({className:'',
-    html:`<div style="width:${s}px;height:${s}px;background:${c};border-radius:50%;border:${big?'2.5px solid #fff':'1.5px solid rgba(0,0,0,.4)'};box-shadow:0 0 ${big?'12px '+c:'3px #0008'};"></div>`,
-    iconSize:[s,s],iconAnchor:[s/2,s/2]});
-}
-function refreshPins(){Object.keys(pins).forEach(i=>pins[i].setIcon(pin(+i)));}
+function refreshPins(){ Object.keys(pins).forEach(i=>pins[i].setIcon(makePin(+i))); }
 
-function popup(i){
-  const s=route[i],done=doneArr.includes(i),isCur=i===cur;
-  L.popup({maxWidth:260,closeButton:true})
+function showPopup(i){
+  const s=route[i], done=doneArr.includes(i), isCur=i===cur;
+  L.popup({maxWidth:270,closeButton:true})
    .setLatLng([s.lat,s.lng])
    .setContent(`<div style="font-family:-apple-system,Arial,sans-serif;">
      <div style="font-size:10px;color:#f5c842;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;">
-       ${isCur?'▶ NEXT':done?'✓ DONE':'Stop #'+(i+1)} · ${fmt(s.dist)}
+       ${isCur?'▶ NEXT STOP':done?'✓ DONE':'Stop #'+(i+1)}
      </div>
-     <div style="font-size:14px;font-weight:600;margin-bottom:12px;line-height:1.4;">${s.a}</div>
+     <div style="font-size:14px;font-weight:700;margin-bottom:12px;line-height:1.4;">${s.a}</div>
      <div style="display:flex;gap:7px;flex-wrap:wrap;">
        ${!done
          ?`<button onclick="doDoneAt(${i})" style="background:#30d158;color:#000;border:none;padding:9px 13px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;">✓ Done</button>`
-         :`<button onclick="undoAt(${i})" style="background:#3a3a3c;color:#aaa;border:none;padding:9px 13px;border-radius:9px;font-size:13px;cursor:pointer;">↩ Undo</button>`}
-       <button onclick="navAt(${i})" style="background:#0a84ff;color:#fff;border:none;padding:9px 13px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;">🧭 Go</button>
-       ${!isCur&&!done?`<button onclick="makeNext(${i})" style="background:#ff6b35;color:#fff;border:none;padding:9px 13px;border-radius:9px;font-size:13px;cursor:pointer;">→ Next</button>`:''}
+         :`<button onclick="undoAt(${i})"   style="background:#3a3a3c;color:#aaa;border:none;padding:9px 13px;border-radius:9px;font-size:13px;cursor:pointer;">↩ Undo</button>`}
+       <button onclick="navAt(${i})" style="background:#0a84ff;color:#fff;border:none;padding:9px 13px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;">🧭 Directions</button>
+       ${!isCur&&!done?`<button onclick="makeNext(${i})" style="background:#ff6b35;color:#fff;border:none;padding:9px 13px;border-radius:9px;font-size:13px;cursor:pointer;">→ Make Next</button>`:''}
      </div>
    </div>`)
    .openOn(map);
 }
 
-// ════════════════════════════════════
+// ══════════════════════════════════════
 // ACTIONS
-// ════════════════════════════════════
-function doDone(){doDoneAt(cur);}
+// ══════════════════════════════════════
+function doDone(){ doDoneAt(cur); }
 function doDoneAt(i){
-  if(!doneArr.includes(i))doneArr.push(i);
+  if(!doneArr.includes(i)) doneArr.push(i);
   map.closePopup();
-  if(i===cur)advance();
+  if(i===cur) advance();
   redraw(); flyTo(cur);
 }
-function undoAt(i){doneArr=doneArr.filter(x=>x!==i);map.closePopup();redraw();}
-function doSkip(){advance();redraw();flyTo(cur);}
-function makeNext(i){cur=i;map.closePopup();redraw();flyTo(i);}
+function undoAt(i){ doneArr=doneArr.filter(x=>x!==i); map.closePopup(); redraw(); }
+function doSkip(){  advance(); redraw(); flyTo(cur); }
+function makeNext(i){ cur=i; map.closePopup(); redraw(); flyTo(i); }
 function advance(){
-  for(let i=cur+1;i<route.length;i++){if(!doneArr.includes(i)){cur=i;return;}}
+  for(let i=cur+1;i<route.length;i++){ if(!doneArr.includes(i)){cur=i;return;} }
   cur=-1;
 }
-function doNav(){navAt(cur);}
+function doNav(){ navAt(cur); }
 function navAt(i){
+  if(i<0) return;
   const a=encodeURIComponent(route[i].a);
   if(/iPhone|iPad|iPod/i.test(navigator.userAgent)){
     window.open(`maps://maps.apple.com/?daddr=${a}&dirflg=d`);
-  }else{
+  } else {
     window.open(`https://www.google.com/maps/dir/?api=1&destination=${a}&travelmode=driving`);
   }
 }
-function flyTo(i){if(i>=0&&route[i])map.flyTo([route[i].lat,route[i].lng],15,{duration:.7});}
-function reCenter(){followMe=true;flyTo(cur);}
+function flyTo(i){ if(i>=0&&route[i]) map.flyTo([route[i].lat,route[i].lng],15,{duration:.7}); }
+function reCenter(){ followMe=true; flyTo(cur); }
 
-// ════════════════════════════════════
-// GPS LIVE TRACKING
-// Called AFTER user has tapped a button — iOS requires user gesture
-// ════════════════════════════════════
-function startTracking(){
+// ══════════════════════════════════════
+// LIVE GPS TRACKING
+// ══════════════════════════════════════
+function startGPSTracking(){
   if(!navigator.geolocation){
-    document.getElementById('gtxt').textContent='GPS not available';
+    document.getElementById('gtxt').textContent='GPS unavailable';
     return;
   }
-  document.getElementById('gtxt').textContent='Requesting location...';
   navigator.geolocation.watchPosition(
     pos=>{
       const{latitude:lat,longitude:lng,accuracy:acc}=pos.coords;
@@ -491,70 +513,77 @@ function startTracking(){
       const icon=L.divIcon({className:'',
         html:`<div style="width:20px;height:20px;background:#0a84ff;border-radius:50%;border:3px solid #fff;box-shadow:0 0 16px #0a84ff88;"></div>`,
         iconSize:[20,20],iconAnchor:[10,10]});
-      if(!userMarker)userMarker=L.marker([lat,lng],{icon,zIndexOffset:9999}).addTo(map);
+      if(!userMarker) userMarker=L.marker([lat,lng],{icon,zIndexOffset:9999}).addTo(map);
       else userMarker.setLatLng([lat,lng]);
-      if(followMe)map.panTo([lat,lng],{animate:true,duration:.4});
+      if(followMe) map.panTo([lat,lng],{animate:true,duration:.4});
     },
     e=>{
-      const msgs={1:'Location denied — go to Settings → Safari → Location → Allow',2:'GPS signal lost',3:'GPS timed out'};
-      document.getElementById('gtxt').textContent=msgs[e.code]||'GPS unavailable';
+      const m={1:'Location denied — Settings → Safari → Location → Allow',2:'GPS signal lost',3:'GPS timed out'};
+      document.getElementById('gtxt').textContent=m[e.code]||'GPS unavailable';
     },
     {enableHighAccuracy:true,timeout:20000,maximumAge:3000}
   );
 }
 
-// ════════════════════════════════════
-// UI REDRAW
-// ════════════════════════════════════
+// ══════════════════════════════════════
+// REDRAW UI
+// ══════════════════════════════════════
 function redraw(){
   refreshPins();
   renderList();
-  const tot=route.length,dn=doneArr.length,pct=Math.round(dn/tot*100);
+  const tot=route.length, dn=doneArr.length, pct=Math.round(dn/tot*100);
   document.getElementById('pfill').style.width=pct+'%';
   document.getElementById('ppct').textContent=pct+'%';
+
   if(cur<0){
-    document.getElementById('tbStop').textContent='All Done!';
-    document.getElementById('tbAddr').textContent='🎉 All stops complete';
-    document.getElementById('tbDist').textContent='';
+    document.getElementById('tbSn').textContent='All done!';
+    document.getElementById('tbAd').textContent='🎉 All '+tot+' stops complete!';
+    document.getElementById('tbDi').textContent='';
     document.getElementById('mcLbl').textContent='Finished';
     document.getElementById('mcAddr').textContent='All '+tot+' stops complete!';
-    document.getElementById('mcDist').textContent='';
+    document.getElementById('mcSub').textContent='Great work!';
     return;
   }
   const s=route[cur];
-  document.getElementById('tbStop').textContent=`Stop ${cur+1}/${tot}`;
-  document.getElementById('tbAddr').textContent=s.a.replace(', MA','');
-  document.getElementById('tbDist').textContent=fmt(s.dist);
+  document.getElementById('tbSn').textContent=`Stop ${cur+1}/${tot}`;
+  document.getElementById('tbAd').textContent=s.a.replace(', MA','');
+  document.getElementById('tbDi').textContent=fmt(s.distFromStart);
   document.getElementById('mcLbl').textContent=`Stop ${cur+1} of ${tot}`;
   document.getElementById('mcAddr').textContent=s.a.replace(', MA','');
-  document.getElementById('mcDist').textContent=`${fmt(s.dist)} from start · ${dn} done`;
+  document.getElementById('mcSub').textContent=`${fmt(s.distFromPrev||0)} from last stop · ${dn} done`;
 }
 
-// ════════════════════════════════════
-// LIST
-// ════════════════════════════════════
+// ══════════════════════════════════════
+// LIST VIEW
+// ══════════════════════════════════════
 function renderList(){
   const el=document.getElementById('lscroll');
   const pend=route.map((_,i)=>i).filter(i=>!doneArr.includes(i));
   const dnL =route.map((_,i)=>i).filter(i=> doneArr.includes(i));
-  let h=`<div class="lhdr">Pending · ${pend.length} stops</div>`;
+  let h=`<div class="lhdr">Stops in route order · ${pend.length} remaining</div>`;
   pend.forEach(i=>{
     const s=route[i],ic=i===cur;
     h+=`<div class="lrow ${ic?'iscur':''}" onclick="listTap(${i})">
       <div class="ln">${i+1}</div>
       <div class="lball ${ic?'cur':''}">${ic?'▶':''}</div>
-      <div class="lbody"><div class="la">${s.a.replace(', MA','')}</div><div class="ld">${fmt(s.dist)}</div></div>
+      <div class="lbody">
+        <div class="la">${s.a.replace(', MA','')}</div>
+        <div class="ld">${fmt(s.distFromPrev||0)} from prev stop</div>
+      </div>
       ${ic?'<div class="ltag cur">NEXT</div>':''}
     </div>`;
   });
   if(dnL.length){
-    h+=`<div class="lhdr">Done · ${dnL.length}</div>`;
+    h+=`<div class="lhdr">Completed · ${dnL.length}</div>`;
     dnL.forEach(i=>{
       const s=route[i];
       h+=`<div class="lrow isdone">
         <div class="ln">${i+1}</div>
         <div class="lball dn">✓</div>
-        <div class="lbody"><div class="la">${s.a.replace(', MA','')}</div><div class="ld">${fmt(s.dist)}</div></div>
+        <div class="lbody">
+          <div class="la">${s.a.replace(', MA','')}</div>
+          <div class="ld">${fmt(s.distFromPrev||0)}</div>
+        </div>
         <div class="ltag dn">done</div>
       </div>`;
     });
@@ -568,19 +597,20 @@ function listTap(i){
   followMe=false;
   setTimeout(()=>{
     map.flyTo([route[i].lat,route[i].lng],16,{duration:.6});
-    setTimeout(()=>popup(i),700);
+    setTimeout(()=>showPopup(i),700);
   },80);
 }
 
-// ════════════════════════════════════
+// ══════════════════════════════════════
 // TABS
-// ════════════════════════════════════
+// ══════════════════════════════════════
 function showTab(t){
   document.getElementById('tabM').classList.toggle('on',t==='map');
   document.getElementById('tabL').classList.toggle('on',t==='list');
   document.getElementById('listScreen').classList.toggle('on',t==='list');
-  if(t==='map')setTimeout(()=>map&&map.invalidateSize(),80);
+  if(t==='map') setTimeout(()=>map&&map.invalidateSize(),80);
 }
 </script>
-</body>
-</html>
+
+
+</body></html>
