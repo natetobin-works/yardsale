@@ -1,548 +1,605 @@
 <!DOCTYPE html>
-<!-- saved from url=(0048)file:///Users/nathantobin/Downloads/index_3.html -->
+<!-- saved from url=(0048)file:///Users/nathantobin/Downloads/index_5.html -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Wareham Yard Sale 2026</title>
-<link href="./Wareham Yard Sale 2026_files/css2" rel="stylesheet">
-<link rel="stylesheet" href="./Wareham Yard Sale 2026_files/leaflet.min.css">
+<link rel="stylesheet" href="./Wareham Yard Sale 2026_files/leaflet.css">
+<script src="./Wareham Yard Sale 2026_files/leaflet.js"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-:root{
-  --bg:#0f0f0f;--surface:#1a1a1a;--surface2:#242424;
-  --accent:#f5c842;--accent2:#ff6b35;--green:#4ade80;
-  --text:#f0f0f0;--muted:#777;--border:#2a2a2a;--blue:#60a5fa;
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html,body { height:100%; background:#111; color:#fff; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif; overflow:hidden; }
+
+/* ───── SETUP SCREEN ───── */
+#setup {
+  position:fixed; inset:0; background:#111; z-index:9999;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:24px 20px; gap:18px;
 }
-body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;height:100dvh;display:flex;flex-direction:column;overflow:hidden;}
+#setup h1 { font-size:24px; font-weight:800; color:#f5c842; text-align:center; letter-spacing:-.5px; }
+#setup p  { font-size:13px; color:#888; text-align:center; max-width:300px; line-height:1.6; }
+.card { background:#1c1c1e; border:1px solid #2c2c2e; border-radius:16px; padding:20px; width:100%; max-width:420px; display:flex; flex-direction:column; gap:14px; }
+.field-label { font-size:11px; color:#888; text-transform:uppercase; letter-spacing:.08em; margin-bottom:4px; }
+.addr-input {
+  width:100%; padding:13px 15px; background:#2c2c2e; border:1.5px solid #3a3a3c;
+  border-radius:10px; color:#fff; font-size:16px; outline:none; transition:border-color .2s;
+}
+.addr-input:focus { border-color:#f5c842; }
+.addr-input::placeholder { color:#555; }
+.input-hint { font-size:11px; color:#555; line-height:1.5; }
+.err { font-size:12px; color:#ff453a; text-align:center; min-height:18px; }
+.btn-yellow { width:100%; padding:15px; background:#f5c842; color:#000; border:none; border-radius:12px; font-size:17px; font-weight:800; cursor:pointer; }
+.btn-yellow:disabled { opacity:.4; cursor:default; }
+.divider { text-align:center; font-size:11px; color:#444; }
+.btn-outline { width:100%; padding:12px; background:transparent; color:#0a84ff; border:1.5px solid #0a84ff; border-radius:12px; font-size:14px; cursor:pointer; }
+.btn-outline:disabled { opacity:.4; }
 
-/* SETUP */
-#setup{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 20px;gap:20px;}
-.s-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:24px;color:var(--accent);text-align:center;}
-.s-sub{font-size:11px;color:var(--muted);text-align:center;letter-spacing:.04em;line-height:1.6;max-width:320px;}
-.s-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 18px;width:100%;max-width:400px;display:flex;flex-direction:column;gap:14px;}
-.s-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;}
-.s-inp{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:9px;color:var(--text);font-family:'DM Mono',monospace;font-size:14px;padding:12px 14px;outline:none;transition:border-color .2s;}
-.s-inp:focus{border-color:var(--accent);}
-.s-inp::placeholder{color:var(--muted);}
-.s-hint{font-size:10px;color:var(--muted);line-height:1.5;}
-.s-btn{background:var(--accent);color:#000;border:none;border-radius:10px;padding:14px;font-family:'Syne',sans-serif;font-weight:800;font-size:15px;cursor:pointer;width:100%;}
-.s-btn:disabled{opacity:.4;cursor:default;}
-.s-or{text-align:center;font-size:10px;color:var(--muted);}
-.s-gps{background:transparent;color:var(--blue);border:1.5px solid var(--blue);border-radius:10px;padding:11px;font-family:'DM Mono',monospace;font-size:12px;cursor:pointer;width:100%;}
-.s-err{font-size:11px;color:#ef4444;text-align:center;min-height:16px;}
+/* ───── MAIN APP ───── */
+#app { position:fixed; inset:0; display:none; flex-direction:column; }
 
-/* APP */
-#app{flex:1;display:none;flex-direction:column;overflow:hidden;}
-header{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 14px;display:flex;align-items:center;gap:8px;flex-shrink:0;}
-.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:13px;color:var(--accent);}
-.hstats{margin-left:auto;display:flex;gap:10px;font-size:11px;color:var(--muted);}
-.hstats span{color:var(--accent);}
-.pbar-wrap{height:3px;background:var(--surface2);flex-shrink:0;}
-.pbar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .4s;}
-.gbar{padding:5px 14px;font-size:10px;display:flex;align-items:center;gap:7px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;}
-.gdot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0;}
-.gdot.live{background:var(--green);box-shadow:0 0 5px var(--green);animation:pulse 2s infinite;}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.gtxt{color:var(--muted);font-size:10px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.tabs{display:flex;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;}
-.tab{flex:1;padding:9px;text-align:center;font-size:11px;color:var(--muted);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;transition:all .2s;text-transform:uppercase;letter-spacing:.05em;font-family:'DM Mono',monospace;}
-.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+/* TOP NAV BAR — shows current address like Google Maps */
+#topbar {
+  position:absolute; top:0; left:0; right:0; z-index:1000;
+  background:rgba(20,20,20,.95); backdrop-filter:blur(10px);
+  border-bottom:1px solid #2c2c2e;
+  padding:10px 14px 10px;
+  display:flex; flex-direction:column; gap:4px;
+}
+.tb-row1 { display:flex; align-items:center; gap:10px; }
+.tb-stop { font-size:11px; color:#f5c842; font-weight:600; text-transform:uppercase; letter-spacing:.06em; flex-shrink:0; }
+.tb-addr { font-size:15px; font-weight:700; flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tb-dist { font-size:12px; color:#888; flex-shrink:0; }
+.tb-row2 { display:flex; align-items:center; gap:7px; }
+.gps-dot { width:7px; height:7px; border-radius:50%; background:#444; flex-shrink:0; }
+.gps-dot.live { background:#30d158; box-shadow:0 0 5px #30d158; animation:blink 2s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+.gps-txt { font-size:11px; color:#666; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.tb-progress { display:flex; align-items:center; gap:6px; margin-left:auto; }
+.tb-pct { font-size:11px; color:#888; }
+.prog-bar { width:60px; height:4px; background:#3a3a3c; border-radius:2px; overflow:hidden; }
+.prog-fill { height:100%; background:#f5c842; transition:width .4s; border-radius:2px; }
 
-/* MAP */
-#mapWrap{flex:1;position:relative;display:none;}
-#mapWrap.on{display:block;}
-#map{width:100%;height:100%;}
-.panel{position:absolute;bottom:0;left:0;right:0;z-index:1000;padding:10px 12px;display:flex;flex-direction:column;gap:8px;}
-.ncard{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:11px 13px;box-shadow:0 4px 24px rgba(0,0,0,.7);}
-.nlbl{font-size:9px;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px;}
-.naddr{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.ndist{font-size:10px;color:var(--muted);margin-top:2px;}
-.arow{display:flex;gap:7px;}
-.btn{border:none;border-radius:9px;padding:12px 0;font-size:12px;font-family:'DM Mono',monospace;font-weight:500;cursor:pointer;flex:1;text-align:center;transition:opacity .15s;}
-.btn:active{opacity:.75;}
-.btn-go{background:var(--green);color:#000;}
-.btn-done{background:var(--accent);color:#000;}
-.btn-skip{background:var(--surface2);color:var(--muted);border:1px solid var(--border);}
+/* MAP fills everything */
+#map { position:absolute; inset:0; }
 
-/* LIST */
-#listWrap{flex:1;overflow-y:auto;display:none;flex-direction:column;}
-#listWrap.on{display:flex;}
-.lhdr{padding:9px 14px;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);background:var(--bg);position:sticky;top:0;z-index:5;border-bottom:1px solid var(--border);}
-.litem{display:flex;align-items:center;padding:11px 14px;border-bottom:1px solid var(--border);gap:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
-.litem:active{background:var(--surface2);}
-.litem.cur{background:rgba(245,200,66,.07);border-left:3px solid var(--accent);}
-.litem.done{opacity:.38;}
-.litem.done .laddr{text-decoration:line-through;}
-.lnum{font-size:10px;color:var(--muted);width:20px;text-align:right;flex-shrink:0;}
-.circ{width:20px;height:20px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;}
-.circ.chk{background:var(--green);border-color:var(--green);color:#000;}
-.circ.cur{border-color:var(--accent);color:var(--accent);}
-.linfo{flex:1;min-width:0;}
-.laddr{font-size:12px;line-height:1.3;}
-.ldist{font-size:10px;color:var(--muted);}
-.lbadge{font-size:9px;padding:2px 7px;border-radius:4px;flex-shrink:0;}
-.lbadge.cur{background:var(--accent);color:#000;font-weight:600;}
-.lbadge.done{background:rgba(74,222,128,.15);color:var(--green);}
-#listWrap::-webkit-scrollbar{width:3px;}
-#listWrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+/* BOTTOM PANEL — action buttons */
+#bottom {
+  position:absolute; bottom:0; left:0; right:0; z-index:1000;
+  background:rgba(20,20,20,.97); backdrop-filter:blur(12px);
+  border-top:1px solid #2c2c2e;
+  padding:12px 14px 20px;
+  display:flex; flex-direction:column; gap:10px;
+}
 
-/* POPUP */
-.dp .leaflet-popup-content-wrapper{background:#1a1a1a;color:#f0f0f0;border:1px solid #2e2e2e;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.8);}
-.dp .leaflet-popup-tip{background:#1a1a1a;}
-.dp .leaflet-popup-close-button{color:#555!important;}
-.dp .leaflet-popup-content{margin:12px 14px;}
+/* mini address card above buttons */
+.mini-card {
+  background:#2c2c2e; border-radius:10px; padding:10px 13px;
+  display:flex; align-items:center; gap:10px;
+}
+.mc-pin { font-size:20px; flex-shrink:0; }
+.mc-info { flex:1; min-width:0; }
+.mc-label { font-size:10px; color:#f5c842; text-transform:uppercase; letter-spacing:.06em; margin-bottom:2px; }
+.mc-addr  { font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.mc-dist  { font-size:11px; color:#888; margin-top:1px; }
+
+/* 3 action buttons */
+.btn-row { display:flex; gap:8px; }
+.act-btn {
+  flex:1; padding:14px 8px; border:none; border-radius:12px;
+  font-size:14px; font-weight:700; cursor:pointer; display:flex;
+  flex-direction:column; align-items:center; gap:3px; transition:opacity .15s;
+}
+.act-btn:active { opacity:.7; }
+.act-btn span { font-size:10px; font-weight:500; }
+.btn-go   { background:#0a84ff; color:#fff; }
+.btn-done { background:#30d158; color:#000; }
+.btn-skip { background:#2c2c2e; color:#aaa; border:1px solid #3a3a3c; }
+
+/* LIST TAB */
+#listScreen {
+  position:absolute; inset:0; z-index:999; background:#111;
+  display:none; flex-direction:column; overflow:hidden;
+}
+#listScreen.on { display:flex; }
+.list-scroll { flex:1; overflow-y:auto; }
+.list-scroll::-webkit-scrollbar { width:3px; }
+.list-scroll::-webkit-scrollbar-thumb { background:#333; border-radius:3px; }
+.ls-hdr { padding:8px 16px; font-size:11px; color:#666; text-transform:uppercase; letter-spacing:.1em; background:#1c1c1e; position:sticky; top:0; border-bottom:1px solid #222; }
+.ls-row { display:flex; align-items:center; padding:12px 16px; border-bottom:1px solid #1c1c1e; gap:12px; cursor:pointer; }
+.ls-row:active { background:#1c1c1e; }
+.ls-row.is-cur { background:rgba(245,200,66,.06); border-left:3px solid #f5c842; }
+.ls-row.is-done { opacity:.35; }
+.ls-row.is-done .ls-addr { text-decoration:line-through; }
+.ls-n    { font-size:11px; color:#555; width:24px; text-align:right; flex-shrink:0; }
+.ls-dot  { width:22px; height:22px; border-radius:50%; border:2px solid #3a3a3c; display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; }
+.ls-dot.cur  { border-color:#f5c842; color:#f5c842; }
+.ls-dot.done { background:#30d158; border-color:#30d158; color:#000; }
+.ls-info { flex:1; min-width:0; }
+.ls-addr { font-size:13px; line-height:1.3; }
+.ls-dist { font-size:11px; color:#666; margin-top:1px; }
+.ls-tag  { font-size:10px; padding:2px 8px; border-radius:5px; flex-shrink:0; }
+.ls-tag.cur  { background:#f5c842; color:#000; font-weight:700; }
+.ls-tag.done { background:rgba(48,209,88,.12); color:#30d158; }
+
+/* TAB BAR at very bottom */
+#tabbar {
+  position:absolute; bottom:0; left:0; right:0; z-index:1001;
+  background:#1c1c1e; border-top:1px solid #2c2c2e;
+  display:flex; height:52px;
+}
+.tb-tab { flex:1; border:none; background:none; color:#666; font-size:12px; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; }
+.tb-tab.on { color:#f5c842; }
+.tb-icon { font-size:20px; line-height:1; }
+
+/* popup override */
+.leaflet-popup-content-wrapper { background:#1c1c1e!important; color:#fff!important; border:1px solid #3a3a3c!important; border-radius:12px!important; box-shadow:0 8px 30px rgba(0,0,0,.8)!important; }
+.leaflet-popup-tip-container { display:none; }
+.leaflet-popup-close-button { color:#666!important; font-size:20px!important; top:8px!important; right:10px!important; }
+.leaflet-popup-content { margin:14px 14px!important; }
+
+/* recenter button */
+#recenter {
+  position:absolute; right:14px; z-index:999;
+  background:#1c1c1e; border:1px solid #3a3a3c; border-radius:10px;
+  width:40px; height:40px; display:flex; align-items:center; justify-content:center;
+  font-size:20px; cursor:pointer; box-shadow:0 2px 10px rgba(0,0,0,.5);
+}
 </style>
 </head>
 <body>
 
-<!-- SETUP SCREEN -->
+<!-- ═══════════ SETUP ═══════════ -->
 <div id="setup">
-  <div class="s-logo">📍 Wareham Yard Sale 2026</div>
-  <div class="s-sub">Enter your starting address and we'll sort all 84 stops from closest to furthest so you hit them in the fastest order.</div>
-  <div class="s-card">
+  <h1>📍 Wareham Yard Sale</h1>
+  <p>Enter your starting address and we'll build the fastest route through all 84 stops, closest first.</p>
+  <div class="card">
     <div>
-      <div class="s-lbl">Your Starting Address</div>
-      <input class="s-inp" id="startInput" type="text" placeholder="351 County Rd, West Wareham" autocomplete="street-address">
-      <div class="s-hint" style="margin-top:6px;">Include your city — Wareham, West Wareham, Onset, etc.</div>
+      <div class="field-label">Your Starting Address</div>
+      <input class="addr-input" id="addrIn" type="text" placeholder="351 County Rd, West Wareham" autocomplete="street-address">
+      <div class="input-hint" style="margin-top:6px;">Include your city — Wareham, West Wareham, Onset, etc.</div>
     </div>
-    <div class="s-err" id="sErr">GPS failed. Enter your address instead.</div>
-    <button class="s-btn" id="sBtn" onclick="goWithAddress()">Build My Route →</button>
-    <div class="s-or">— or —</div>
-    <button class="s-gps" id="sGps" onclick="goWithGPS()">📡 Use My Current GPS Location</button>
+    <div class="err" id="errTxt"></div>
+    <button class="btn-yellow" id="goBtn" onclick="startAddr()">Build My Route →</button>
+    <div class="divider">— or —</div>
+    <button class="btn-outline" id="gpsBtn" onclick="startGPS()">📡 Use My Current GPS Location</button>
   </div>
 </div>
 
-<!-- APP SCREEN -->
+<!-- ═══════════ APP ═══════════ -->
 <div id="app">
-  <header>
-    <div class="logo">📍 WAREHAM YARD SALE 2026</div>
-    <div class="hstats">
-      <div>✓ <span id="doneN">0</span></div>
-      <div>Left: <span id="leftN">0</span></div>
+
+  <!-- top bar -->
+  <div id="topbar">
+    <div class="tb-row1">
+      <div class="tb-stop" id="tbStop">Stop 1</div>
+      <div class="tb-addr" id="tbAddr">—</div>
+      <div class="tb-dist" id="tbDist"></div>
     </div>
-  </header>
-  <div class="pbar-wrap"><div class="pbar-fill" id="pbar" style="width:0%"></div></div>
-  <div class="gbar">
-    <div class="gdot" id="gdot"></div>
-    <div class="gtxt" id="gtxt">Starting GPS...</div>
+    <div class="tb-row2">
+      <div class="gps-dot" id="gpsDot"></div>
+      <div class="gps-txt" id="gpsTxt">Locating...</div>
+      <div class="tb-progress">
+        <div class="tb-pct" id="tbPct">0%</div>
+        <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+      </div>
+    </div>
   </div>
-  <div class="tabs">
-    <button class="tab active" onclick="showTab(&#39;map&#39;)">🗺 Map</button>
-    <button class="tab" onclick="showTab(&#39;list&#39;)">📋 List</button>
+
+  <!-- map -->
+  <div id="map"></div>
+
+  <!-- recenter btn — placed dynamically -->
+  <div id="recenter" onclick="recenterMap()">📍</div>
+
+  <!-- bottom buttons -->
+  <div id="bottom">
+    <div class="mini-card">
+      <div class="mc-pin">🎯</div>
+      <div class="mc-info">
+        <div class="mc-label" id="mcLabel">Next Stop</div>
+        <div class="mc-addr" id="mcAddr">—</div>
+        <div class="mc-dist" id="mcDist"></div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="act-btn btn-go" onclick="openDirections()">🧭<span>Directions</span></button>
+      <button class="act-btn btn-done" onclick="markDone()">✓<span>Done</span></button>
+      <button class="act-btn btn-skip" onclick="skipStop()">⏭<span>Skip</span></button>
+    </div>
   </div>
-  <div id="mapWrap" class="on">
-    <div id="map"></div>
-    <div class="panel" id="panel"></div>
+
+  <!-- list screen (slides over map) -->
+  <div id="listScreen">
+    <div class="list-scroll" id="listScroll"></div>
   </div>
-  <div id="listWrap"></div>
+
+  <!-- tab bar -->
+  <div id="tabbar">
+    <button class="tb-tab on" id="tabMap" onclick="showTab(&#39;map&#39;)"><div class="tb-icon">🗺</div>Map</button>
+    <button class="tb-tab" id="tabList" onclick="showTab(&#39;list&#39;)"><div class="tb-icon">📋</div>List</button>
+  </div>
+
 </div>
 
-<script src="./Wareham Yard Sale 2026_files/leaflet.min.js"></script>
 <script>
-// ═══════════════════════════════════════════════
-// PRE-BAKED COORDINATES — loads instantly, no API calls needed
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════
+// 84 STOPS — COORDS PRE-BAKED IN
+// ═══════════════════════════════════════
 const STOPS = [
-  {a:"66 Circuit Ave, Wareham, MA",            lat:41.7623, lng:-70.7198},
-  {a:"14 Rosepoint Ave, West Wareham, MA",     lat:41.7701, lng:-70.7512},
-  {a:"19 Rosepoint Ave, West Wareham, MA",     lat:41.7703, lng:-70.7514},
-  {a:"293 Marion Rd, Wareham, MA",             lat:41.7558, lng:-70.7623},
-  {a:"12 Naushon Rd, West Wareham, MA",        lat:41.7689, lng:-70.7601},
-  {a:"6 Storer St, Onset, MA",                 lat:41.7412, lng:-70.6598},
-  {a:"30 Marine Ave, West Wareham, MA",        lat:41.7715, lng:-70.7634},
-  {a:"25 Pheasant Ave, Wareham, MA",           lat:41.7634, lng:-70.7156},
-  {a:"13 Sandpiper Terrace, Wareham, MA",      lat:41.7621, lng:-70.7134},
-  {a:"120 Glen Charlie Rd, East Wareham, MA",  lat:41.7598, lng:-70.6934},
-  {a:"32 Restful Ln, East Wareham, MA",        lat:41.7567, lng:-70.6812},
-  {a:"152 Marion Rd, Wareham, MA",             lat:41.7578, lng:-70.7589},
-  {a:"51 Avenue A, Wareham, MA",               lat:41.7489, lng:-70.6701},
-  {a:"28 Pilgrim Ave, Wareham, MA",            lat:41.7502, lng:-70.6723},
-  {a:"75 Pilgrim Ave, Wareham, MA",            lat:41.7498, lng:-70.6745},
-  {a:"19 Marks Cove Rd, Wareham, MA",          lat:41.7445, lng:-70.6678},
-  {a:"20 Marks Cove Rd, Wareham, MA",          lat:41.7447, lng:-70.6680},
-  {a:"21 Marks Cove Rd, Wareham, MA",          lat:41.7449, lng:-70.6682},
-  {a:"22 Marks Cove Rd, Wareham, MA",          lat:41.7451, lng:-70.6684},
-  {a:"23 Marks Cove Rd, Wareham, MA",          lat:41.7453, lng:-70.6686},
-  {a:"10 Juniper St, Wareham, MA",             lat:41.7612, lng:-70.7089},
-  {a:"5 Centennial Place, Onset, MA",          lat:41.7389, lng:-70.6567},
-  {a:"2 Churbuck St, East Wareham, MA",        lat:41.7556, lng:-70.6823},
-  {a:"6 Midway St, Onset, MA",                 lat:41.7401, lng:-70.6578},
-  {a:"19 Meadowlark Dr, Wareham, MA",          lat:41.7678, lng:-70.7234},
-  {a:"2 Wright Ln, Wareham, MA",               lat:41.7623, lng:-70.7301},
-  {a:"11 Wright Ln, Wareham, MA",              lat:41.7625, lng:-70.7312},
-  {a:"3 Columbia St, Wareham, MA",             lat:41.7589, lng:-70.7145},
-  {a:"2 Sea St, Wareham, MA",                  lat:41.7534, lng:-70.7067},
-  {a:"Helen St, West Wareham, MA",             lat:41.7712, lng:-70.7523},
-  {a:"157 Onset Ave, East Wareham, MA",        lat:41.7478, lng:-70.6712},
-  {a:"159 Onset Ave, East Wareham, MA",        lat:41.7476, lng:-70.6710},
-  {a:"4 Anthonys Way, Buzzards Bay, MA",       lat:41.7456, lng:-70.6234},
-  {a:"462 Main St, Wareham, MA",               lat:41.7601, lng:-70.7156},
-  {a:"295 Charge Pond Rd, Wareham, MA",        lat:41.7834, lng:-70.7089},
-  {a:"850 County Rd, Wareham, MA",             lat:41.7712, lng:-70.7045},
-  {a:"3 Mayflower Ln, East Wareham, MA",       lat:41.7545, lng:-70.6867},
-  {a:"60 Mayflower Way, East Wareham, MA",     lat:41.7534, lng:-70.6878},
-  {a:"55 Barlow Ave, West Wareham, MA",        lat:41.7723, lng:-70.7589},
-  {a:"59 Barlow Ave, West Wareham, MA",        lat:41.7725, lng:-70.7592},
-  {a:"8 Beach St, Wareham, MA",                lat:41.7512, lng:-70.7034},
-  {a:"13 Shangrila Blvd, East Wareham, MA",    lat:41.7489, lng:-70.6756},
-  {a:"6 Blackbird Ave, Wareham, MA",           lat:41.7645, lng:-70.7112},
-  {a:"10 Blackbird Ave, East Wareham, MA",     lat:41.7478, lng:-70.6923},
-  {a:"31 Bayview St, Wareham, MA",             lat:41.7523, lng:-70.7056},
-  {a:"144 Glen Charlie Rd, East Wareham, MA",  lat:41.7589, lng:-70.6912},
-  {a:"15 Circle Dr, Wareham, MA",              lat:41.7667, lng:-70.7189},
-  {a:"39 Avenue A, Wareham, MA",               lat:41.7494, lng:-70.6712},
-  {a:"18 Mattapoiset Rd, Wareham, MA",         lat:41.7601, lng:-70.7645},
-  {a:"170 Cromesset Rd, Wareham, MA",          lat:41.7756, lng:-70.7234},
-  {a:"171 Cromesset Rd, Wareham, MA",          lat:41.7758, lng:-70.7236},
-  {a:"4 Cedar Island Rd, Wareham, MA",         lat:41.7534, lng:-70.7312},
-  {a:"14 Winter St, West Wareham, MA",         lat:41.7734, lng:-70.7545},
-  {a:"6 Foundry Circle, West Wareham, MA",     lat:41.7745, lng:-70.7512},
-  {a:"8 Donald St, West Wareham, MA",          lat:41.7718, lng:-70.7534},
-  {a:"3 Chapel Ln, East Wareham, MA",          lat:41.7512, lng:-70.6845},
-  {a:"6 Bayside Ave, Wareham, MA",             lat:41.7478, lng:-70.7023},
-  {a:"12 Robinwood Rd, Buzzards Bay, MA",      lat:41.7467, lng:-70.6256},
-  {a:"20 Hideaway Ln, East Wareham, MA",       lat:41.7523, lng:-70.6834},
-  {a:"25 Redbrook Rd, Wareham, MA",            lat:41.7689, lng:-70.7089},
-  {a:"20 Repose Ln, East Wareham, MA",         lat:41.7534, lng:-70.6856},
-  {a:"8 Lynne Rd, Wareham, MA",               lat:41.7656, lng:-70.7167},
-  {a:"9 Leisure Ln, East Wareham, MA",         lat:41.7501, lng:-70.6823},
-  {a:"32 Leisure Ln, East Wareham, MA",        lat:41.7503, lng:-70.6834},
-  {a:"34 Leisure Ln, East Wareham, MA",        lat:41.7505, lng:-70.6836},
-  {a:"17 Weston Ave, Wareham, MA",             lat:41.7634, lng:-70.7201},
-  {a:"2305 Cranberry Hwy, Wareham, MA",        lat:41.7823, lng:-70.7134},
-  {a:"2331 Cranberry Hwy, West Wareham, MA",   lat:41.7834, lng:-70.7156},
-  {a:"3229 Cranberry Hwy, Wareham, MA",        lat:41.7912, lng:-70.7234},
-  {a:"2614 Cranberry Hwy, Wareham, MA",        lat:41.7856, lng:-70.7189},
-  {a:"2618 Cranberry Hwy, Wareham, MA",        lat:41.7858, lng:-70.7191},
-  {a:"2272 Cranberry Hwy, West Wareham, MA",   lat:41.7812, lng:-70.7145},
-  {a:"11 Sippican Rd, Wareham, MA",            lat:41.7578, lng:-70.7623},
-  {a:"15 Sippican Rd, Wareham, MA",            lat:41.7580, lng:-70.7625},
-  {a:"17 Sippican Rd, Wareham, MA",            lat:41.7582, lng:-70.7627},
-  {a:"18 Sippican Rd, Wareham, MA",            lat:41.7584, lng:-70.7629},
-  {a:"54 Great Neck Rd, East Wareham, MA",     lat:41.7456, lng:-70.6934},
-  {a:"12 Division Ave, Wareham, MA",           lat:41.7545, lng:-70.7012},
-  {a:"20 Willard St, Wareham, MA",             lat:41.7512, lng:-70.6989},
-  {a:"21 Willard St, Wareham, MA",             lat:41.7514, lng:-70.6991},
-  {a:"28 Osborne Ave, West Wareham, MA",       lat:41.7723, lng:-70.7601},
-  {a:"39 Arnold St, West Wareham, MA",         lat:41.7734, lng:-70.7567},
-  {a:"40 Arnold St, West Wareham, MA",         lat:41.7736, lng:-70.7569},
-  {a:"7 Connahasset Rd, Wareham, MA",          lat:41.7623, lng:-70.7389}
+  {a:"66 Circuit Ave, Wareham, MA",           lat:41.7623,lng:-70.7198},
+  {a:"14 Rosepoint Ave, West Wareham, MA",    lat:41.7701,lng:-70.7512},
+  {a:"19 Rosepoint Ave, West Wareham, MA",    lat:41.7703,lng:-70.7514},
+  {a:"293 Marion Rd, Wareham, MA",            lat:41.7558,lng:-70.7623},
+  {a:"12 Naushon Rd, West Wareham, MA",       lat:41.7689,lng:-70.7601},
+  {a:"6 Storer St, Onset, MA",                lat:41.7412,lng:-70.6598},
+  {a:"30 Marine Ave, West Wareham, MA",       lat:41.7715,lng:-70.7634},
+  {a:"25 Pheasant Ave, Wareham, MA",          lat:41.7634,lng:-70.7156},
+  {a:"13 Sandpiper Terrace, Wareham, MA",     lat:41.7621,lng:-70.7134},
+  {a:"120 Glen Charlie Rd, East Wareham, MA", lat:41.7598,lng:-70.6934},
+  {a:"32 Restful Ln, East Wareham, MA",       lat:41.7567,lng:-70.6812},
+  {a:"152 Marion Rd, Wareham, MA",            lat:41.7578,lng:-70.7589},
+  {a:"51 Avenue A, Wareham, MA",              lat:41.7489,lng:-70.6701},
+  {a:"28 Pilgrim Ave, Wareham, MA",           lat:41.7502,lng:-70.6723},
+  {a:"75 Pilgrim Ave, Wareham, MA",           lat:41.7498,lng:-70.6745},
+  {a:"19 Marks Cove Rd, Wareham, MA",         lat:41.7445,lng:-70.6678},
+  {a:"20 Marks Cove Rd, Wareham, MA",         lat:41.7447,lng:-70.6680},
+  {a:"21 Marks Cove Rd, Wareham, MA",         lat:41.7449,lng:-70.6682},
+  {a:"22 Marks Cove Rd, Wareham, MA",         lat:41.7451,lng:-70.6684},
+  {a:"23 Marks Cove Rd, Wareham, MA",         lat:41.7453,lng:-70.6686},
+  {a:"10 Juniper St, Wareham, MA",            lat:41.7612,lng:-70.7089},
+  {a:"5 Centennial Place, Onset, MA",         lat:41.7389,lng:-70.6567},
+  {a:"2 Churbuck St, East Wareham, MA",       lat:41.7556,lng:-70.6823},
+  {a:"6 Midway St, Onset, MA",                lat:41.7401,lng:-70.6578},
+  {a:"19 Meadowlark Dr, Wareham, MA",         lat:41.7678,lng:-70.7234},
+  {a:"2 Wright Ln, Wareham, MA",              lat:41.7623,lng:-70.7301},
+  {a:"11 Wright Ln, Wareham, MA",             lat:41.7625,lng:-70.7312},
+  {a:"3 Columbia St, Wareham, MA",            lat:41.7589,lng:-70.7145},
+  {a:"2 Sea St, Wareham, MA",                 lat:41.7534,lng:-70.7067},
+  {a:"Helen St, West Wareham, MA",            lat:41.7712,lng:-70.7523},
+  {a:"157 Onset Ave, East Wareham, MA",       lat:41.7478,lng:-70.6712},
+  {a:"159 Onset Ave, East Wareham, MA",       lat:41.7476,lng:-70.6710},
+  {a:"4 Anthonys Way, Buzzards Bay, MA",      lat:41.7456,lng:-70.6234},
+  {a:"462 Main St, Wareham, MA",              lat:41.7601,lng:-70.7156},
+  {a:"295 Charge Pond Rd, Wareham, MA",       lat:41.7834,lng:-70.7089},
+  {a:"850 County Rd, Wareham, MA",            lat:41.7712,lng:-70.7045},
+  {a:"3 Mayflower Ln, East Wareham, MA",      lat:41.7545,lng:-70.6867},
+  {a:"60 Mayflower Way, East Wareham, MA",    lat:41.7534,lng:-70.6878},
+  {a:"55 Barlow Ave, West Wareham, MA",       lat:41.7723,lng:-70.7589},
+  {a:"59 Barlow Ave, West Wareham, MA",       lat:41.7725,lng:-70.7592},
+  {a:"8 Beach St, Wareham, MA",               lat:41.7512,lng:-70.7034},
+  {a:"13 Shangrila Blvd, East Wareham, MA",   lat:41.7489,lng:-70.6756},
+  {a:"6 Blackbird Ave, Wareham, MA",          lat:41.7645,lng:-70.7112},
+  {a:"10 Blackbird Ave, East Wareham, MA",    lat:41.7478,lng:-70.6923},
+  {a:"31 Bayview St, Wareham, MA",            lat:41.7523,lng:-70.7056},
+  {a:"144 Glen Charlie Rd, East Wareham, MA", lat:41.7589,lng:-70.6912},
+  {a:"15 Circle Dr, Wareham, MA",             lat:41.7667,lng:-70.7189},
+  {a:"39 Avenue A, Wareham, MA",              lat:41.7494,lng:-70.6712},
+  {a:"18 Mattapoiset Rd, Wareham, MA",        lat:41.7601,lng:-70.7645},
+  {a:"170 Cromesset Rd, Wareham, MA",         lat:41.7756,lng:-70.7234},
+  {a:"171 Cromesset Rd, Wareham, MA",         lat:41.7758,lng:-70.7236},
+  {a:"4 Cedar Island Rd, Wareham, MA",        lat:41.7534,lng:-70.7312},
+  {a:"14 Winter St, West Wareham, MA",        lat:41.7734,lng:-70.7545},
+  {a:"6 Foundry Circle, West Wareham, MA",    lat:41.7745,lng:-70.7512},
+  {a:"8 Donald St, West Wareham, MA",         lat:41.7718,lng:-70.7534},
+  {a:"3 Chapel Ln, East Wareham, MA",         lat:41.7512,lng:-70.6845},
+  {a:"6 Bayside Ave, Wareham, MA",            lat:41.7478,lng:-70.7023},
+  {a:"12 Robinwood Rd, Buzzards Bay, MA",     lat:41.7467,lng:-70.6256},
+  {a:"20 Hideaway Ln, East Wareham, MA",      lat:41.7523,lng:-70.6834},
+  {a:"25 Redbrook Rd, Wareham, MA",           lat:41.7689,lng:-70.7089},
+  {a:"20 Repose Ln, East Wareham, MA",        lat:41.7534,lng:-70.6856},
+  {a:"8 Lynne Rd, Wareham, MA",               lat:41.7656,lng:-70.7167},
+  {a:"9 Leisure Ln, East Wareham, MA",        lat:41.7501,lng:-70.6823},
+  {a:"32 Leisure Ln, East Wareham, MA",       lat:41.7503,lng:-70.6834},
+  {a:"34 Leisure Ln, East Wareham, MA",       lat:41.7505,lng:-70.6836},
+  {a:"17 Weston Ave, Wareham, MA",            lat:41.7634,lng:-70.7201},
+  {a:"2305 Cranberry Hwy, Wareham, MA",       lat:41.7823,lng:-70.7134},
+  {a:"2331 Cranberry Hwy, West Wareham, MA",  lat:41.7834,lng:-70.7156},
+  {a:"3229 Cranberry Hwy, Wareham, MA",       lat:41.7912,lng:-70.7234},
+  {a:"2614 Cranberry Hwy, Wareham, MA",       lat:41.7856,lng:-70.7189},
+  {a:"2618 Cranberry Hwy, Wareham, MA",       lat:41.7858,lng:-70.7191},
+  {a:"2272 Cranberry Hwy, West Wareham, MA",  lat:41.7812,lng:-70.7145},
+  {a:"11 Sippican Rd, Wareham, MA",           lat:41.7578,lng:-70.7623},
+  {a:"15 Sippican Rd, Wareham, MA",           lat:41.7580,lng:-70.7625},
+  {a:"17 Sippican Rd, Wareham, MA",           lat:41.7582,lng:-70.7627},
+  {a:"18 Sippican Rd, Wareham, MA",           lat:41.7584,lng:-70.7629},
+  {a:"54 Great Neck Rd, East Wareham, MA",    lat:41.7456,lng:-70.6934},
+  {a:"12 Division Ave, Wareham, MA",          lat:41.7545,lng:-70.7012},
+  {a:"20 Willard St, Wareham, MA",            lat:41.7512,lng:-70.6989},
+  {a:"21 Willard St, Wareham, MA",            lat:41.7514,lng:-70.6991},
+  {a:"28 Osborne Ave, West Wareham, MA",      lat:41.7723,lng:-70.7601},
+  {a:"39 Arnold St, West Wareham, MA",        lat:41.7734,lng:-70.7567},
+  {a:"40 Arnold St, West Wareham, MA",        lat:41.7736,lng:-70.7569},
+  {a:"7 Connahasset Rd, Wareham, MA",         lat:41.7623,lng:-70.7389}
 ];
 
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════
 // STATE
-// ═══════════════════════════════════════════════
-let route      = [];   // sorted STOPS array
-let completed  = [];
-let currentIdx = 0;
-let startCoord = null;
-let map, userMarker, markers = {};
+// ═══════════════════════════════════════
+let route   = [];
+let cur     = 0;
+let doneArr = [];
+let map, userMarker, pins = {};
+let followMe = true; // auto-pan to user location
 
-function haversine(a, b) {
-  const R = 3958.8; // miles
-  const dLat = (b.lat - a.lat) * Math.PI / 180;
-  const dLng = (b.lng - a.lng) * Math.PI / 180;
-  const x = Math.sin(dLat/2)**2 + Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLng/2)**2;
-  return R * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1-x));
+function mi(a,b){
+  const R=3958.8, dLat=(b.lat-a.lat)*Math.PI/180, dLng=(b.lng-a.lng)*Math.PI/180;
+  const x=Math.sin(dLat/2)**2+Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLng/2)**2;
+  return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
 }
+function fmt(m){ return m<0.1 ? Math.round(m*5280)+'ft' : m.toFixed(1)+' mi'; }
 
-function fmtMi(mi) {
-  return mi < 0.1 ? `${Math.round(mi*5280)} ft` : `${mi.toFixed(1)} mi`;
-}
-
-// ═══════════════════════════════════════════════
-// SETUP
-// ═══════════════════════════════════════════════
-async function goWithAddress() {
-  const val = document.getElementById('startInput').value.trim();
-  if (!val) { setErr('Please enter your address.'); return; }
-  const btn = document.getElementById('sBtn');
-  btn.disabled = true; btn.textContent = 'Looking up…';
+// ═══════════════════════════════════════
+// SETUP HANDLERS
+// ═══════════════════════════════════════
+async function startAddr(){
+  const val = document.getElementById('addrIn').value.trim();
+  if(!val){ setErr('Please enter your address.'); return; }
+  const btn = document.getElementById('goBtn');
+  btn.disabled=true; btn.textContent='Looking up...';
   setErr('');
-  // geocode via Nominatim (just the ONE start address — fast)
-  const q = encodeURIComponent(val.toLowerCase().includes(', ma') ? val : val + ', MA');
-  try {
-    const r = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${q}&limit=1`);
+  const q = val.toLowerCase().includes(', ma') ? val : val+', MA';
+  try{
+    const r = await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q='+encodeURIComponent(q));
     const d = await r.json();
-    if (!d || !d[0]) throw new Error('not found');
-    startCoord = { lat: parseFloat(d[0].lat), lng: parseFloat(d[0].lon) };
-    buildAndLaunch();
-  } catch(e) {
+    if(!d||!d[0]) throw 0;
+    boot({lat:parseFloat(d[0].lat), lng:parseFloat(d[0].lon)});
+  }catch(e){
     setErr("Couldn't find that address. Try: 351 County Rd, West Wareham, MA");
-    btn.disabled = false; btn.textContent = 'Build My Route →';
+    btn.disabled=false; btn.textContent='Build My Route →';
   }
 }
 
-function goWithGPS() {
-  if (!navigator.geolocation) { setErr('GPS not available.'); return; }
-  const btn = document.getElementById('sGps');
-  btn.textContent = '📡 Getting location…';
-  navigator.geolocation.getCurrentPosition(pos => {
-    startCoord = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-    buildAndLaunch();
-  }, () => {
-    setErr('GPS failed. Enter your address instead.');
-    btn.textContent = '📡 Use My Current GPS Location';
-  }, { enableHighAccuracy: true, timeout: 12000 });
+function startGPS(){
+  if(!navigator.geolocation){setErr('GPS not available.');return;}
+  const btn=document.getElementById('gpsBtn');
+  btn.disabled=true; btn.textContent='Getting location...';
+  setErr('');
+  navigator.geolocation.getCurrentPosition(
+    p=>boot({lat:p.coords.latitude,lng:p.coords.longitude}),
+    ()=>{setErr('GPS failed. Enter your address instead.');btn.disabled=false;btn.textContent='📡 Use My Current GPS Location';},
+    {enableHighAccuracy:true,timeout:12000}
+  );
 }
+function setErr(m){document.getElementById('errTxt').textContent=m;}
 
-function setErr(msg) { document.getElementById('sErr').textContent = msg; }
+// ═══════════════════════════════════════
+// BOOT APP
+// ═══════════════════════════════════════
+function boot(start){
+  // Sort closest → furthest
+  route = STOPS.map(s=>({...s,dist:mi(start,s)})).sort((a,b)=>a.dist-b.dist);
+  cur=0; doneArr=[];
 
-function buildAndLaunch() {
-  // Sort all stops by distance from startCoord — instant, no API needed
-  route = [...STOPS].map(s => ({
-    ...s,
-    dist: haversine(startCoord, s)
-  })).sort((a, b) => a.dist - b.dist);
+  // Show app
+  document.getElementById('setup').style.display='none';
+  document.getElementById('app').style.display='flex';
 
-  completed  = [];
-  currentIdx = 0;
+  // Init map — dark tiles, centered on first stop
+  map = L.map('map',{zoomControl:false,attributionControl:false})
+          .setView([route[0].lat,route[0].lng],14);
 
-  document.getElementById('setup').style.display = 'none';
-  document.getElementById('app').style.display   = 'flex';
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+    {subdomains:'abcd',maxZoom:19}).addTo(map);
 
-  initMap();
-  startGPS();
-  placeAllMarkers();
-  renderList();
-  updateUI();
-  map.setView([route[0].lat, route[0].lng], 14);
-}
+  // zoom control above recenter button
+  L.control.zoom({position:'topright'}).addTo(map);
 
-// ═══════════════════════════════════════════════
-// MAP
-// ═══════════════════════════════════════════════
-function initMap() {
-  map = L.map('map', { zoomControl: false }).setView([41.762, -70.72], 12);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    attribution: '© OpenStreetMap © CartoDB', subdomains: 'abcd', maxZoom: 19
-  }).addTo(map);
-  L.control.zoom({ position: 'topright' }).addTo(map);
+  // position recenter button below zoom
+  const rc = document.getElementById('recenter');
+  rc.style.top = '160px';
+
+  // Stop panning when user drags map
+  map.on('dragstart', ()=>{ followMe=false; });
 
   // Start pin
-  if (startCoord) {
-    L.marker([startCoord.lat, startCoord.lng], { icon: L.divIcon({
-      className:'',
-      html:`<div style="width:14px;height:14px;background:#aaa;border-radius:50%;border:2px solid #fff;box-shadow:0 0 6px #000;"></div>`,
-      iconSize:[14,14],iconAnchor:[7,7]
-    })}).addTo(map).bindPopup('<div style="font-family:DM Mono,monospace;color:#f0f0f0;">🏁 Your start</div>');
-  }
+  L.marker([start.lat,start.lng],{icon:dotIcon('#aaa',14),zIndexOffset:100})
+   .addTo(map).bindPopup('<b style="color:#fff">🏁 Your Start</b>');
+
+  // Place all pins instantly
+  route.forEach((s,i)=>{
+    pins[i] = L.marker([s.lat,s.lng],{icon:pinIcon(i)})
+      .addTo(map).on('click',()=>pinPopup(i));
+  });
+
+  // Draw thin route line connecting all stops in order
+  const latlngs = route.map(s=>[s.lat,s.lng]);
+  L.polyline(latlngs,{color:'#f5c842',weight:2,opacity:.35,dashArray:'4,6'}).addTo(map);
+
+  // GPS live tracking
+  liveGPS();
+  redraw();
 }
 
-function pinColor(idx) {
-  if (completed.includes(idx)) return '#4ade80';
-  if (idx === currentIdx)      return '#f5c842';
+// ═══════════════════════════════════════
+// MAP PINS
+// ═══════════════════════════════════════
+function pinColor(i){
+  if(doneArr.includes(i)) return '#30d158';
+  if(i===cur)             return '#f5c842';
   return '#ff6b35';
 }
 
-function makeIcon(idx) {
-  const c = pinColor(idx), curr = idx === currentIdx, s = curr ? 18 : 11;
-  return L.divIcon({
-    className:'',
-    html:`<div style="width:${s}px;height:${s}px;background:${c};border-radius:50%;border:${curr?'2px solid #fff':'1.5px solid rgba(0,0,0,.4)'};box-shadow:0 0 ${curr?'10px '+c:'3px rgba(0,0,0,.5)'};"></div>`,
-    iconSize:[s,s], iconAnchor:[s/2,s/2]
-  });
+function dotIcon(color,size){
+  return L.divIcon({className:'',
+    html:`<div style="width:${size}px;height:${size}px;background:${color};border-radius:50%;border:2px solid rgba(0,0,0,.5);box-shadow:0 0 ${size>12?'8px '+color:'3px rgba(0,0,0,.5)'};"></div>`,
+    iconSize:[size,size],iconAnchor:[size/2,size/2]});
 }
 
-function placeAllMarkers() {
-  route.forEach((s, idx) => {
-    markers[idx] = L.marker([s.lat, s.lng], { icon: makeIcon(idx) })
-      .addTo(map)
-      .on('click', () => openPopup(idx));
-  });
+function pinIcon(i){
+  const c=pinColor(i), big=i===cur, s=big?18:10;
+  return L.divIcon({className:'',
+    html:`<div style="width:${s}px;height:${s}px;background:${c};border-radius:50%;border:${big?'2.5px solid #fff':'1.5px solid rgba(0,0,0,.4)'};box-shadow:0 0 ${big?'10px '+c:'3px rgba(0,0,0,.5)'};"></div>`,
+    iconSize:[s,s],iconAnchor:[s/2,s/2]});
 }
 
-function refreshMarkers() {
-  Object.keys(markers).forEach(i => markers[i].setIcon(makeIcon(+i)));
+function refreshPins(){
+  Object.keys(pins).forEach(i=>pins[i].setIcon(pinIcon(+i)));
 }
 
-function openPopup(idx) {
-  const s = route[idx];
-  const isDone = completed.includes(idx), isCurr = idx === currentIdx;
-  L.popup({ className:'dp', closeButton:true, maxWidth:270 })
-    .setLatLng([s.lat, s.lng])
-    .setContent(`<div style="font-family:'DM Mono',monospace;">
-      <div style="font-size:10px;color:#f5c842;margin-bottom:3px;text-transform:uppercase;">
-        ${isCurr?'▶ CURRENT STOP':isDone?'✓ DONE':'Stop #'+(idx+1)} · ${fmtMi(s.dist)} away
+function pinPopup(i){
+  const s=route[i], done=doneArr.includes(i), isCur=i===cur;
+  L.popup({maxWidth:260,closeButton:true})
+   .setLatLng([s.lat,s.lng])
+   .setContent(`
+    <div style="font-family:-apple-system,Arial,sans-serif;">
+      <div style="font-size:10px;color:#f5c842;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">
+        ${isCur?'▶ NEXT STOP':done?'✓ DONE':'Stop #'+(i+1)} · ${fmt(s.dist)}
       </div>
-      <div style="font-size:13px;margin-bottom:10px;line-height:1.4;">${s.a}</div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;">
-        ${!isDone
-          ?`<button onclick="markDone(${idx})" style="background:#4ade80;color:#000;border:none;padding:7px 12px;border-radius:7px;font-size:11px;font-family:'DM Mono',monospace;cursor:pointer;">✓ Done</button>`
-          :`<button onclick="undoDone(${idx})" style="background:#333;color:#aaa;border:1px solid #444;padding:7px 12px;border-radius:7px;font-size:11px;font-family:'DM Mono',monospace;cursor:pointer;">↩ Undo</button>`}
-        <button onclick="navTo(${idx})" style="background:#60a5fa;color:#000;border:none;padding:7px 12px;border-radius:7px;font-size:11px;font-family:'DM Mono',monospace;cursor:pointer;">🧭 Directions</button>
-        ${!isCurr&&!isDone?`<button onclick="setCurrent(${idx})" style="background:#ff6b35;color:#fff;border:none;padding:7px 12px;border-radius:7px;font-size:11px;font-family:'DM Mono',monospace;cursor:pointer;">→ Go Here</button>`:''}
+      <div style="font-size:14px;font-weight:600;margin-bottom:10px;line-height:1.4;">${s.a}</div>
+      <div style="display:flex;gap:7px;flex-wrap:wrap;">
+        ${!done
+          ?`<button onclick="markDoneAt(${i})" style="background:#30d158;color:#000;border:none;padding:8px 12px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✓ Done</button>`
+          :`<button onclick="undoAt(${i})" style="background:#3a3a3c;color:#aaa;border:none;padding:8px 12px;border-radius:8px;font-size:13px;cursor:pointer;">↩ Undo</button>`}
+        <button onclick="navAt(${i})" style="background:#0a84ff;color:#fff;border:none;padding:8px 12px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">🧭 Go Here</button>
+        ${!isCur&&!done?`<button onclick="goHere(${i})" style="background:#ff6b35;color:#fff;border:none;padding:8px 12px;border-radius:8px;font-size:13px;cursor:pointer;">→ Make Next</button>`:''}
       </div>
     </div>`)
-    .openOn(map);
+   .openOn(map);
 }
 
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════
 // ACTIONS
-// ═══════════════════════════════════════════════
-function markDone(idx) {
-  if (!completed.includes(idx)) completed.push(idx);
-  map.closePopup();
-  if (idx === currentIdx) advance();
-  refresh();
-}
+// ═══════════════════════════════════════
+function markDone(){    markDoneAt(cur); }
+function markDoneAt(i){ if(!doneArr.includes(i))doneArr.push(i); map.closePopup(); if(i===cur)advance(); redraw(); flyToCur(); }
+function undoAt(i){     doneArr=doneArr.filter(x=>x!==i); map.closePopup(); redraw(); }
+function skipStop(){    advance(); redraw(); flyToCur(); }
+function goHere(i){     cur=i; map.closePopup(); redraw(); flyToCur(); }
 
-function undoDone(idx) {
-  completed = completed.filter(i => i !== idx);
-  map.closePopup();
-  refresh();
-}
-
-function setCurrent(idx) {
-  currentIdx = idx;
-  map.closePopup();
-  refresh();
-  panTo(idx);
-}
-
-function advance() {
-  for (let i = currentIdx + 1; i < route.length; i++) {
-    if (!completed.includes(i)) { currentIdx = i; return; }
+function advance(){
+  for(let i=cur+1;i<route.length;i++){
+    if(!doneArr.includes(i)){cur=i;return;}
   }
-  currentIdx = -1;
+  cur=-1;
 }
 
-function skipStop() {
-  advance();
-  refresh();
-  if (currentIdx >= 0) panTo(currentIdx);
-}
-
-function navTo(idx) {
-  const addr = encodeURIComponent(route[idx].a);
-  if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+function openDirections(){ navAt(cur); }
+function navAt(i){
+  const addr=encodeURIComponent(route[i].a);
+  if(/iPhone|iPad|iPod/i.test(navigator.userAgent)){
     window.open(`maps://maps.apple.com/?daddr=${addr}&dirflg=d`);
-  } else {
+  }else{
     window.open(`https://www.google.com/maps/dir/?api=1&destination=${addr}&travelmode=driving`);
   }
 }
 
-function panTo(idx) {
-  if (route[idx]) map.flyTo([route[idx].lat, route[idx].lng], 15, { duration: 0.8 });
+function flyToCur(){
+  if(cur>=0&&route[cur]) map.flyTo([route[cur].lat,route[cur].lng],15,{duration:.7});
 }
 
-function refresh() {
-  refreshMarkers();
+function recenterMap(){
+  followMe=true;
+  flyToCur();
+}
+
+// ═══════════════════════════════════════
+// LIVE GPS
+// ═══════════════════════════════════════
+function liveGPS(){
+  if(!navigator.geolocation) return;
+  navigator.geolocation.watchPosition(pos=>{
+    const {latitude:lat,longitude:lng,accuracy:acc}=pos.coords;
+    document.getElementById('gpsDot').classList.add('live');
+    document.getElementById('gpsTxt').textContent=`GPS · ±${Math.round(acc)}m`;
+    const icon=L.divIcon({className:'',
+      html:`<div style="width:18px;height:18px;background:#0a84ff;border-radius:50%;border:3px solid #fff;box-shadow:0 0 14px #0a84ff;"></div>`,
+      iconSize:[18,18],iconAnchor:[9,9]});
+    if(!userMarker) userMarker=L.marker([lat,lng],{icon,zIndexOffset:9999}).addTo(map);
+    else userMarker.setLatLng([lat,lng]);
+    if(followMe) map.panTo([lat,lng],{animate:true,duration:.5});
+  },()=>{
+    document.getElementById('gpsTxt').textContent='GPS unavailable — use 🧭 Directions';
+  },{enableHighAccuracy:true,timeout:15000,maximumAge:3000});
+}
+
+// ═══════════════════════════════════════
+// REDRAW UI
+// ═══════════════════════════════════════
+function redraw(){
+  refreshPins();
   renderList();
-  updateUI();
-}
 
-// ═══════════════════════════════════════════════
-// GPS LIVE TRACKING
-// ═══════════════════════════════════════════════
-function startGPS() {
-  if (!navigator.geolocation) {
-    document.getElementById('gtxt').textContent = 'GPS unavailable — use Directions button';
+  const total=route.length, dLen=doneArr.length;
+  const pct=Math.round(dLen/total*100);
+  document.getElementById('progFill').style.width=pct+'%';
+  document.getElementById('tbPct').textContent=pct+'%';
+
+  if(cur<0){
+    document.getElementById('tbStop').textContent='Done!';
+    document.getElementById('tbAddr').textContent='All stops complete 🎉';
+    document.getElementById('tbDist').textContent='';
+    document.getElementById('mcLabel').textContent='Finished';
+    document.getElementById('mcAddr').textContent='All 84 stops complete!';
+    document.getElementById('mcDist').textContent='';
     return;
   }
-  navigator.geolocation.watchPosition(pos => {
-    const { latitude: lat, longitude: lng, accuracy: acc } = pos.coords;
-    document.getElementById('gdot').classList.add('live');
-    document.getElementById('gtxt').textContent = `GPS live · ±${Math.round(acc)}m`;
-    const icon = L.divIcon({
-      className:'',
-      html:`<div style="width:16px;height:16px;background:#60a5fa;border-radius:50%;border:3px solid #fff;box-shadow:0 0 12px #60a5fa;"></div>`,
-      iconSize:[16,16], iconAnchor:[8,8]
-    });
-    if (!userMarker) userMarker = L.marker([lat,lng],{icon,zIndexOffset:9999}).addTo(map);
-    else userMarker.setLatLng([lat, lng]);
-  }, () => {
-    document.getElementById('gtxt').textContent = 'GPS unavailable — tap 🧭 for directions';
-  }, { enableHighAccuracy: true, timeout: 15000 });
+
+  const s=route[cur];
+  document.getElementById('tbStop').textContent=`Stop ${cur+1}/${total}`;
+  document.getElementById('tbAddr').textContent=s.a.replace(', MA','');
+  document.getElementById('tbDist').textContent=fmt(s.dist);
+  document.getElementById('mcLabel').textContent=`Stop ${cur+1} of ${total}`;
+  document.getElementById('mcAddr').textContent=s.a.replace(', MA','');
+  document.getElementById('mcDist').textContent=`${fmt(s.dist)} from your start · ${dLen} done`;
 }
 
-// ═══════════════════════════════════════════════
-// UI
-// ═══════════════════════════════════════════════
-function updateUI() {
-  const done  = completed.filter(i => i >= 0).length;
-  const total = route.length;
-  document.getElementById('doneN').textContent = done;
-  document.getElementById('leftN').textContent = total - done;
-  document.getElementById('pbar').style.width  = `${(done/total)*100}%`;
-  renderPanel();
-}
-
-function renderPanel() {
-  const p = document.getElementById('panel');
-  if (currentIdx < 0) {
-    p.innerHTML = `<div style="background:var(--surface);border-radius:10px;padding:16px;text-align:center;font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--green);">🎉 All done!</div>`;
-    return;
-  }
-  const s = route[currentIdx];
-  p.innerHTML = `
-    <div class="ncard">
-      <div class="nlbl">▶ Stop ${currentIdx+1} of ${route.length}</div>
-      <div class="naddr">${s.a.replace(', MA','')}</div>
-      <div class="ndist">${fmtMi(s.dist)} from your start</div>
-    </div>
-    <div class="arow">
-      <button class="btn btn-go"   onclick="navTo(${currentIdx})">🧭 Directions</button>
-      <button class="btn btn-done" onclick="markDone(${currentIdx})">✓ Done</button>
-      <button class="btn btn-skip" onclick="skipStop()">Skip</button>
-    </div>`;
-}
-
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════
 // LIST
-// ═══════════════════════════════════════════════
-function renderList() {
-  const c = document.getElementById('listWrap');
-  const pending  = route.map((_,i)=>i).filter(i=>!completed.includes(i));
-  const doneList = route.map((_,i)=>i).filter(i=>completed.includes(i));
-  let html = `<div class="lhdr">Pending · ${pending.length} stops</div>`;
-  pending.forEach(idx => {
-    const s = route[idx], curr = idx===currentIdx;
-    html += `<div class="litem ${curr?'cur':''}" onclick="listTap(${idx})">
-      <div class="lnum">${idx+1}</div>
-      <div class="circ ${curr?'cur':''}">${curr?'▶':''}</div>
-      <div class="linfo">
-        <div class="laddr">${s.a.replace(', MA','')}</div>
-        <div class="ldist">${fmtMi(s.dist)} from start</div>
+// ═══════════════════════════════════════
+function renderList(){
+  const el=document.getElementById('listScroll');
+  const pending =route.map((_,i)=>i).filter(i=>!doneArr.includes(i));
+  const doneList=route.map((_,i)=>i).filter(i=> doneArr.includes(i));
+  let h=`<div class="ls-hdr">Pending · ${pending.length} stops</div>`;
+  pending.forEach(i=>{
+    const s=route[i],isCur=i===cur;
+    h+=`<div class="ls-row ${isCur?'is-cur':''}" onclick="listTap(${i})">
+      <div class="ls-n">${i+1}</div>
+      <div class="ls-dot ${isCur?'cur':''}">${isCur?'▶':''}</div>
+      <div class="ls-info">
+        <div class="ls-addr">${s.a.replace(', MA','')}</div>
+        <div class="ls-dist">${fmt(s.dist)} from start</div>
       </div>
-      ${curr?'<div class="lbadge cur">NEXT</div>':''}
+      ${isCur?'<div class="ls-tag cur">NEXT</div>':''}
     </div>`;
   });
-  if (doneList.length) {
-    html += `<div class="lhdr">Completed · ${doneList.length}</div>`;
-    doneList.forEach(idx => {
-      const s = route[idx];
-      html += `<div class="litem done" onclick="listTap(${idx})">
-        <div class="lnum">${idx+1}</div>
-        <div class="circ chk">✓</div>
-        <div class="linfo">
-          <div class="laddr">${s.a.replace(', MA','')}</div>
-          <div class="ldist">${fmtMi(s.dist)}</div>
+  if(doneList.length){
+    h+=`<div class="ls-hdr">Completed · ${doneList.length}</div>`;
+    doneList.forEach(i=>{
+      const s=route[i];
+      h+=`<div class="ls-row is-done">
+        <div class="ls-n">${i+1}</div>
+        <div class="ls-dot done">✓</div>
+        <div class="ls-info">
+          <div class="ls-addr">${s.a.replace(', MA','')}</div>
+          <div class="ls-dist">${fmt(s.dist)}</div>
         </div>
-        <div class="lbadge done">done</div>
+        <div class="ls-tag done">done</div>
       </div>`;
     });
   }
-  c.innerHTML = html;
+  // add padding at bottom so last item clears the tab bar
+  h+=`<div style="height:60px;"></div>`;
+  el.innerHTML=h;
 }
 
-function listTap(idx) {
+function listTap(i){
   showTab('map');
-  setTimeout(() => {
-    map.flyTo([route[idx].lat, route[idx].lng], 16, { duration:0.7 });
-    setTimeout(() => openPopup(idx), 800);
-  }, 80);
+  followMe=false;
+  setTimeout(()=>{
+    map.flyTo([route[i].lat,route[i].lng],16,{duration:.6});
+    setTimeout(()=>pinPopup(i),700);
+  },80);
 }
 
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════
 // TABS
-// ═══════════════════════════════════════════════
-function showTab(t) {
-  document.querySelectorAll('.tab').forEach((el,i) =>
-    el.classList.toggle('active', (i===0&&t==='map')||(i===1&&t==='list')));
-  document.getElementById('mapWrap').classList.toggle('on',  t==='map');
-  document.getElementById('listWrap').classList.toggle('on', t==='list');
-  if (t==='map') setTimeout(()=>map.invalidateSize(),80);
+// ═══════════════════════════════════════
+function showTab(t){
+  document.getElementById('tabMap').classList.toggle('on',  t==='map');
+  document.getElementById('tabList').classList.toggle('on', t==='list');
+  document.getElementById('listScreen').classList.toggle('on', t==='list');
+  if(t==='map') setTimeout(()=>map&&map.invalidateSize(),80);
 }
 </script>
 
